@@ -5,10 +5,10 @@
 //     elCell.innerHTML = value
 // }
 
-// function getClassName(location) {
-//     const cellClass = 'cell-' + location.i + '-' + location.j
-//     return cellClass
-// }
+function getClassName(location) {
+    const cellClass = 'cell-' + location.i + '-' + location.j
+    return cellClass
+}
 
 // function getRandomIntInclusive(min, max) {
 //     return Math.floor(Math.random() * (max - min + 1)) + min
