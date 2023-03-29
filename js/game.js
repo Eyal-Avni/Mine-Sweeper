@@ -4,13 +4,20 @@ const BEGINNER = { SIZE: 4, MINES: 2 }
 const MEDIUM = { SIZE: 8, MINES: 14 }
 const EXPERT = { SIZE: 12, MINES: 32 }
 
+const HAPPY_IMG = '<img src="img/happy.png">'
+const EXPLODING_IMG = '<img src="img/exploding.png">'
+const VICTORY_IMG = '<img src="img/victory.png">'
+const HINT_IMG = '<img src="img/hint.png">'
+const HINT_READY_IMG = '<img src="img/hint-ready.png">'
+
 var gBoard
 var gLevel
 var gGame
-var gGameTimerInterval = null
+var gGameTimerInterval
+var gHints
 
 function onInit() {
-    gLevel = MEDIUM
+    if (!gLevel) gLevel = BEGINNER
     gGame = {
         isOn: true,
         shownCount: 0,
@@ -19,12 +26,20 @@ function onInit() {
         lives: 3,
     }
     gBoard = buildBoard()
+    clearInterval(gGameTimerInterval)
     renderBoard(gBoard, '.board-container')
+    renderHUD()
     closeModal()
-    var elMarkCount = document.querySelector('.mark-count')
-    elMarkCount.innerText = gLevel.MINES - gGame.markedCount
-    var elLives = document.querySelector('.lives')
-    elLives.innerText = gGame.lives
+}
+
+function onChooseDifficulty(difficulty) {
+    const diffOpts = [BEGINNER, MEDIUM, EXPERT]
+    for (var i = 0; i < diffOpts.length; i++) {
+        if (+difficulty === i) {
+            gLevel = diffOpts[i]
+            onInit()
+        }
+    }
 }
 
 function buildBoard() {
@@ -51,7 +66,6 @@ function randomizeMines(board, i, j) {
         if (!board[randI][randJ].isMine && randI !== i && randJ !== j) {
             board[randI][randJ].isMine = true
             mineCount++
-            console.log(`mine set to ${randI},${randJ}`)
         }
     }
     setMinesNegsCount(board)
@@ -76,6 +90,23 @@ function setMinesNegsCount(board) {
     return board
 }
 
+function renderHUD() {
+    gHints = initHints()
+    // console.log(gHints)
+    gGameTimerInterval = null
+    var elTimer = document.querySelector('.timer')
+    elTimer.innerText = gGame.secsPassed
+    var elMarkCount = document.querySelector('.mark-count')
+    elMarkCount.innerText = gLevel.MINES - gGame.markedCount
+    var elLives = document.querySelector('.lives')
+    if (gLevel === BEGINNER) {
+        gGame.lives = 1
+        elLives.innerText = 'Only in MEDIUM / EXPERT mode'
+    } else elLives.innerText = gGame.lives
+    var elSmiley = document.querySelector('.smiley-btn')
+    elSmiley.innerHTML = HAPPY_IMG
+}
+
 function renderBoard(mat, selector) {
     var strHTML = '<table border="0"><tbody>'
     for (var i = 0; i < mat.length; i++) {
@@ -96,13 +127,16 @@ function renderBoard(mat, selector) {
 
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
-    startTimer()
     if (gBoard[i][j].isShown) return
-    console.log(gGame.shownCount)
+    if (isHintSelected()) {
+        useSelectedHint(elCell)
+        return
+    }
     if (gBoard[i][j].isMine) {
         checkGameLost(elCell, i, j)
         return
     }
+    startTimer()
     if (!gGame.shownCount) {
         randomizeMines(gBoard, i, j)
     }
@@ -111,6 +145,8 @@ function onCellClicked(elCell, i, j) {
     if (gBoard[i][j].isMarked) {
         removeMark(elCell, i, j)
     }
+    var elSmiley = document.querySelector('.smiley-btn')
+    elSmiley.innerHTML = HAPPY_IMG
     checkVictory()
 }
 
@@ -162,7 +198,10 @@ function checkVictory() {
     var shownCount = 0
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard.length; j++) {
-            if (gBoard[i][j].isMarked && gBoard[i][j].isMine) {
+            if (
+                (gBoard[i][j].isMarked && gBoard[i][j].isMine) ||
+                (gBoard[i][j].isMine && gBoard[i][j].isShown)
+            ) {
                 markedMinesCount++
             } else if (gBoard[i][j].isShown) {
                 shownCount++
@@ -174,6 +213,8 @@ function checkVictory() {
         shownCount === gLevel.SIZE ** 2 - gLevel.MINES
     ) {
         gGame.isOn = false
+        var elSmiley = document.querySelector('.smiley-btn')
+        elSmiley.innerHTML = VICTORY_IMG
         clearInterval(gGameTimerInterval)
         openModal('Victory!!')
     }
@@ -181,6 +222,8 @@ function checkVictory() {
 
 function checkGameLost(elCell, i, j) {
     loseLifeAndUpdate()
+    var elSmiley = document.querySelector('.smiley-btn')
+    elSmiley.innerHTML = EXPLODING_IMG
     if (!gGame.lives) {
         gameLost()
         return

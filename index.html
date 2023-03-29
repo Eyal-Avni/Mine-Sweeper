@@ -10,9 +10,45 @@
 
     <body onload="onInit()">
         <h1>Mine Sweeper</h1>
+        <div>
+            <form class="radio-buttons">
+                <fieldset>
+                    <div>
+                        <input
+                            name="opt"
+                            type="radio"
+                            value="0"
+                            onclick="onChooseDifficulty(this.value)"
+                        />
+                        <label for="contactChoice1">BEGINNER</label>
+
+                        <input
+                            name="opt"
+                            type="radio"
+                            value="1"
+                            onclick="onChooseDifficulty(this.value)"
+                        />
+                        <label for="contactChoice2">MEDIUM</label>
+
+                        <input
+                            name="opt"
+                            type="radio"
+                            value="2"
+                            onclick="onChooseDifficulty(this.value)"
+                        />
+                        <label for="contactChoice3">EXPERT</label>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="hints"></div>
         <h2>Timer: <span class="timer"></span></h2>
         <h2>Hidden mines remaining: <span class="mark-count"></span></h2>
         <h2>Lives: <span class="lives"></span></h2>
+        <button class="smiley-btn" onclick="onInit()">
+            <img src="img/happy.png" />
+        </button>
+
         <div class="board-container"></div>
 
         <div class="modal">
@@ -23,5 +59,6 @@
         <footer>Eyal Avni</footer>
         <script src="js/utils.js"></script>
         <script src="js/game.js"></script>
+        <script src="js/hints.js"></script>
     </body>
 </html>
