@@ -19,7 +19,6 @@ var gGame
 var gGameTimerInterval
 
 function onInit() {
-    handleRightClicks()
     gLevel = { SIZE: 4, MINES: 2 }
     gGame = { isOn: true, shownCount: 0, markedCount: 0, secsPassed: 0 }
     gBoard = buildBoard()
@@ -70,6 +69,7 @@ function renderBoard(mat, selector) {
     strHTML += '</tbody></table>'
     const elContainer = document.querySelector(selector)
     elContainer.innerHTML = strHTML
+    handleRightClicks('.cell')
 }
 
 function setMinesNegsCount(board) {

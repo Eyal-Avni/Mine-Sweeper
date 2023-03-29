@@ -18,9 +18,12 @@ function getRandomColor() {
     return color
 }
 
-function handleRightClicks() {
-    window.oncontextmenu = (ev) => {
-        ev.preventDefault()
-        onCellMarked(ev.target)
+function handleRightClicks(selector) {
+    var elCells = document.querySelectorAll(selector)
+    for (var i = 0; i < elCells.length; i++) {
+        elCells[i].oncontextmenu = (ev) => {
+            ev.preventDefault()
+            onCellMarked(ev.target)
+        }
     }
 }
