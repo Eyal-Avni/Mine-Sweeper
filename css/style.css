@@ -38,7 +38,7 @@ table {
     height: 30px;
 }
 
-.cell mark .modal {
+.modal {
     display: none;
     border: solid 3px grey;
     width: 300px;
@@ -52,7 +52,7 @@ table {
 }
 
 .restart-btn {
-    margin-top: 20px;
+    margin-top: 5px;
     background-color: black;
     color: rgb(230, 221, 221);
     padding: 10px;
