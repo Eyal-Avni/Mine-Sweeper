@@ -26,6 +26,7 @@ function onInit() {
         markedCount: 0,
         secsPassed: 0,
         lives: 3,
+        sandboxOn: false,
     }
     gBoard = buildBoard()
     clearInterval(gGameTimerInterval)
@@ -99,8 +100,7 @@ function renderHUD() {
     gGameTimerInterval = null
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = gGame.secsPassed
-    var elMarkCount = document.querySelector('.mark-count')
-    elMarkCount.innerText = gLevel.MINES - gGame.markedCount
+    updateMarkCount()
     var elLives = document.querySelector('.lives')
     if (gLevel === BEGINNER) {
         gGame.lives = 1 // In beginner mode no reason to have more than 1 life (there are only 2 mines)
@@ -141,9 +141,10 @@ function onCellClicked(elCell, i, j) {
         return
     }
     startTimer()
-    if (!gGame.shownCount) {
+    if (countMines() === 0) {
         randomizeMines(gBoard, i, j)
     }
+    updateMarkCount()
     expandShown(i, j)
     if (gBoard[i][j].isMarked) {
         removeMark(elCell, i, j)
@@ -238,9 +239,10 @@ function checkVictory() {
         }
     }
     if (
-        markedMinesCount === gLevel.MINES &&
-        shownCount === gLevel.SIZE ** 2 - gLevel.MINES
+        markedMinesCount === countMines() &&
+        shownCount === gLevel.SIZE ** 2 - countMines()
     ) {
+        revealAllMines()
         gGame.isOn = false
         var score = gGame.secsPassed
         compareBestScore(score, gLevel.DIFFICULTY)
@@ -313,9 +315,19 @@ function removeMark(elCell, i, j) {
     gGame.markedCount--
 }
 
+function countMines() {
+    var count = 0
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if (gBoard[i][j].isMine) count++
+        }
+    }
+    return count
+}
+
 function updateMarkCount() {
     var elMarkCount = document.querySelector('.mark-count')
-    elMarkCount.innerText = gLevel.MINES - gGame.markedCount
+    elMarkCount.innerText = countMines() - gGame.markedCount
 }
 
 function openModal(msg) {

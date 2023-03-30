@@ -28,6 +28,10 @@ body {
     margin: 0;
 }
 
+.sandbox-btn {
+    margin-top: 10px;
+}
+
 table {
     margin: auto;
 }
@@ -71,10 +75,12 @@ table {
     /* box-shadow: 0px 0px 4px 4px gray inset;
     background: darkgrey; */
     background-image: url('../img/hidden.png');
+    cursor: pointer;
 }
 
 .cell-marked {
     background-image: url('../img/flag.png');
+    cursor: pointer;
 }
 
 .cell-mine {
@@ -134,7 +140,7 @@ fieldset {
     font-size: 32px;
     position: absolute;
     top: 400px;
-    left: calc(50% - 150px);
+    left: calc(20% - 150px);
 }
 
 .restart-btn {
