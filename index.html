@@ -16,6 +16,7 @@
                 <img src="img/happy.png" />
             </button>
         </div>
+        <h3 class="mines-remain">Hidden mines remaining: <span class="mark-count"></span></h3>
         <div class="left-zone">
             <div>
                 <h3 class="score-title">Best Score</h3>
@@ -66,6 +67,9 @@
             </div>
         </div>
         <div class="right-zone">
+            <!-- <button class="undo" onclick="onUndo(this)">Undo</button> -->
+            <button class="dark-mode" onclick="onToggleDisplayMode(this)"><span class="dark-mode-txt"></span></button>
+
             <div class="hints"></div>
             <div class="safe-container">
                 <button class="safe-click" onclick="onSafeClick(this)">Safe Click</button>  
@@ -73,8 +77,6 @@
             </div>  
             <button class="sandbox-btn" onclick="onSandbox(this)">SandBox mode!</button>
         </div>
-        
-        <h3 class="mines-remain">Hidden mines remaining: <span class="mark-count"></span></h3>
 
         <div class="board-container"></div>
 

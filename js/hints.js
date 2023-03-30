@@ -121,3 +121,19 @@ function markRandomSafe() {
         randSafeCell.j
     )
 }
+
+function saveAction() {
+    var savedBoard = gBoard.map((x) => x)
+    // savedBoard = gBoard.map((x) => x)
+    // console.log(gBoard)
+    // console.log(savedBoard)
+    gUndoStack.push(savedBoard)
+    console.log(gUndoStack)
+}
+
+function onUndo() {
+    debugger
+    gBoard = gUndoStack.pop()
+    console.log(gBoard)
+    renderBoard(gBoard, '.board-container')
+}

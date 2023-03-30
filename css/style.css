@@ -6,6 +6,15 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
 }
+button {
+    background-color: transparent;
+}
+
+.dark-mode-filter {
+    transition: 500ms;
+    background-color: rgba(28, 2, 67, 0.874);
+    background-blend-mode: multiply;
+}
 
 .lives-header {
     display: inline-block;
@@ -22,6 +31,7 @@ body {
     width: 50px;
     height: 50px;
     margin-left: 10px;
+    background-color: transparent;
 }
 
 .time-header {
@@ -43,6 +53,12 @@ body {
 
 .smiley-btn img {
     width: 65%;
+    background-color: transparent;
+}
+
+.mines-remain {
+    text-align: center;
+    margin-top: 0;
 }
 
 .left-zone {
@@ -69,7 +85,7 @@ fieldset {
 }
 
 .right-zone {
-    padding-top: 100px;
+    padding-bottom: 100px;
     display: inline-block;
     text-align: center;
     padding-left: 62%;
@@ -85,6 +101,7 @@ fieldset {
 
 .hint-btn img {
     width: 100%;
+    background-color: transparent;
 }
 
 .safe-container p {
@@ -93,10 +110,6 @@ fieldset {
 
 .sandbox-btn {
     margin-top: 10px;
-}
-
-.mines-remain {
-    text-align: center;
 }
 
 table {
@@ -120,9 +133,8 @@ table {
     font-size: 1.5em;
     width: calc(100% / 12);
     height: calc(100% / 12);
-    color: aqua;
+    color: darkred;
     font-weight: bolder;
-    text-shadow: 0px 0px 10px #faff00, 5px 5px 10px #000;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -153,7 +165,7 @@ table {
     border: solid 3px grey;
     width: 300px;
     height: 200px;
-    background-color: rgb(222, 226, 228);
+    background-color: whitesmoke;
     color: black;
     font-size: 32px;
     position: absolute;
@@ -165,7 +177,7 @@ table {
 .restart-btn {
     margin-top: 5px;
     background-color: black;
-    color: rgb(230, 221, 221);
+    color: whitesmoke;
     padding: 10px;
     cursor: pointer;
 }

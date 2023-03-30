@@ -18,6 +18,7 @@ var gGameTimerInterval
 var gHints
 var gSafeClickCount
 var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
+var gUndoStack
 
 function onInit() {
     if (!gLevel) gLevel = MEDIUM
@@ -28,8 +29,11 @@ function onInit() {
         secsPassed: 0,
         lives: 3,
         sandboxOn: false,
+        isDarkMode: false,
     }
     gBoard = buildBoard()
+    gUndoStack = []
+    saveAction()
     clearInterval(gGameTimerInterval)
     renderBoard(gBoard, '.board-container')
     renderHUD()
@@ -110,6 +114,8 @@ function renderHUD() {
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
     updateSafeClickButton()
+    var elDarkModeTxt = document.querySelector('.dark-mode-txt')
+    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Light Mode' : 'Dark Mode'
 }
 
 function renderBoard(mat, selector) {
@@ -119,8 +125,13 @@ function renderBoard(mat, selector) {
         for (var j = 0; j < mat[0].length; j++) {
             var cell = mat[i][j]
             var className = `cell`
-            className += mat[i][j].isShown ? ' cell-shown' : ' cell-hidden'
-            strHTML += `<td id="cell-${i}-${j}" class="${className}" onclick="onCellClicked(this,${i},${j})" ></td>`
+            className += cell.isShown ? ' cell-shown' : ' cell-hidden'
+            // if (cell.isMine) className += ' cell-mine'
+            strHTML += `<td id="cell-${i}-${j}" class="${className}" onclick="onCellClicked(this,${i},${j})" >`
+            if (!cell.isMine && cell.minesAroundCount > 0 && !cell.isShown) {
+                strHTML += `${cell.minesAroundCount}`
+            }
+            strHTML += '</td>'
         }
         strHTML += '</tr>'
     }
@@ -152,6 +163,7 @@ function onCellClicked(elCell, i, j) {
     }
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
+    saveAction()
     checkVictory()
 }
 
@@ -304,7 +316,6 @@ function revealAllMines() {
 }
 
 function revealCell(elCell, i, j) {
-    // debugger
     gGame.shownCount++
     gBoard[i][j].isShown = true
     elCell.classList.add('cell-shown')
@@ -348,4 +359,45 @@ function openModal(msg) {
 function closeModal() {
     const elModal = document.querySelector('.modal')
     elModal.style.display = 'none'
+}
+
+function onToggleDisplayMode() {
+    gGame.isDarkMode = !gGame.isDarkMode
+    var elBody = document.querySelector('body')
+    var elButtons = document.querySelectorAll('button')
+    var elImgs = document.querySelectorAll('img')
+    var elSmiley = document.querySelector('.smiley-btn')
+    var elRestartBtn = document.querySelector('.restart-btn')
+    var elModal = document.querySelector('.modal')
+    if (gGame.isDarkMode) {
+        elBody.classList.add('dark-mode-filter')
+        elModal.style.color = 'white'
+        elModal.style.backgroundColor = 'transparent'
+        elBody.style.color = 'white'
+        elSmiley.style.backgroundImage = 'url("../img/moon.png")'
+        elSmiley.style.backgroundSize = 'contain'
+        elButtons.forEach((elButton) => {
+            elButton.style.color = 'white'
+            elButton.classList.add('dark-mode-filter')
+        })
+        elImgs.forEach((elImg) => {
+            elImg.classList.add('dark-mode-filter')
+        })
+    } else {
+        elBody.classList.remove('dark-mode-filter')
+        elModal.style.color = 'black'
+        elBody.style.color = 'black'
+        elSmiley.style.backgroundImage = 'url("../img/sun.png")'
+        elSmiley.style.backgroundSize = 'cover'
+        elButtons.forEach((elButton) => {
+            elButton.style.color = 'black'
+            elButton.classList.remove('dark-mode-filter')
+        })
+        elImgs.forEach((elImg) => {
+            elImg.classList.remove('dark-mode-filter')
+        })
+        elRestartBtn.style.color = 'whitesmoke'
+    }
+    var elDarkModeTxt = document.querySelector('.dark-mode-txt')
+    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Light Mode' : 'Dark Mode'
 }
