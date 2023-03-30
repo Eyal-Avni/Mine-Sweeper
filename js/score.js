@@ -9,11 +9,11 @@ function renderBestScore() {
     gScore.BEGINNER = localStorage.getItem('BEGINNER')
     gScore.MEDIUM = localStorage.getItem('MEDIUM')
     gScore.EXPERT = localStorage.getItem('EXPERT')
-    if (!gScore.BEGINNER) elBeginnerScore.innerText = 'Non yet'
+    if (!gScore.BEGINNER) elBeginnerScore.innerText = 'None yet'
     else elBeginnerScore.innerText = localStorage.getItem('BEGINNER')
-    if (!gScore.MEDIUM) elMediumScore.innerText = 'Non yet'
+    if (!gScore.MEDIUM) elMediumScore.innerText = 'None yet'
     else elMediumScore.innerText = localStorage.getItem('MEDIUM')
-    if (!gScore.EXPERT) elExpertScore.innerText = 'Non yet'
+    if (!gScore.EXPERT) elExpertScore.innerText = 'None yet'
     else elExpertScore.innerText = localStorage.getItem('EXPERT')
 }
 

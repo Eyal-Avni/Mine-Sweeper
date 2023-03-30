@@ -9,8 +9,12 @@
     </head>
 
     <body onload="onInit()">
-        <h1>Mine Sweeper</h1>
-
+        <div class="game-header">
+            <h3>Lives: <span class="lives"></span></h3>
+            <h1 class="game-title">Mine Sweeper</h1>
+            <h3>Timer: <span class="timer"></span></h3>
+        </div>
+       
         <div>
             <h3 class="score-title">Best Score</h3>
             <table class="score-table">
@@ -60,9 +64,9 @@
             </form>
         </div>
         <div class="hints"></div>
-        <h3>Timer: <span class="timer"></span></h3>
+        
         <h3>Hidden mines remaining: <span class="mark-count"></span></h3>
-        <h3>Lives: <span class="lives"></span></h3>
+        
         <button class="smiley-btn" onclick="onInit()">
             <img src="img/happy.png" />
         </button>

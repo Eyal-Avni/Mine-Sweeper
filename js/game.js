@@ -94,7 +94,6 @@ function setMinesNegsCount(board) {
 function renderHUD() {
     renderBestScore()
     gHints = initHints()
-    // console.log(gHints)
     gGameTimerInterval = null
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = gGame.secsPassed
@@ -102,9 +101,9 @@ function renderHUD() {
     elMarkCount.innerText = gLevel.MINES - gGame.markedCount
     var elLives = document.querySelector('.lives')
     if (gLevel === BEGINNER) {
-        gGame.lives = 1
-        elLives.innerText = 'Only in MEDIUM / EXPERT mode'
-    } else elLives.innerText = gGame.lives
+        gGame.lives = 1 // In begginer mode no reason to have more than 1 life (there are only 2 mines)
+    }
+    elLives.innerText = gGame.lives
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
 }
@@ -142,7 +141,6 @@ function onCellClicked(elCell, i, j) {
     if (!gGame.shownCount) {
         randomizeMines(gBoard, i, j)
     }
-    revealCell(elCell, i, j)
     expandShown(i, j)
     if (gBoard[i][j].isMarked) {
         removeMark(elCell, i, j)
@@ -165,19 +163,45 @@ function onCellMarked(elCell) {
     checkVictory()
 }
 
-function expandShown(posX, posY) {
-    for (var i = posX - 1; i <= posX + 1; i++) {
-        if (i < 0 || i >= gBoard.length) continue
-        for (var j = posY - 1; j <= posY + 1; j++) {
-            if (j < 0 || j >= gBoard[i].length) continue
-            if (i === posX && j === posY) continue
-            var currCell = gBoard[i][j]
-            if (!currCell.isMine) {
-                gGame.shownCount++
-                gBoard[i][j].isShown = true
-                var pos = { i, j }
-                var elCell = document.querySelector(`#${getClassName(pos)}`)
-                revealCell(elCell, i, j)
+//This is my original algorithm to expand cells shown to neigbors of first degree
+// function expandShown(posX, posY) {
+//     for (var i = posX - 1; i <= posX + 1; i++) {
+//         if (i < 0 || i >= gBoard.length) continue
+//         for (var j = posY - 1; j <= posY + 1; j++) {
+//             if (j < 0 || j >= gBoard[i].length) continue
+//             if (i === posX && j === posY) continue
+//             var currCell = gBoard[i][j]
+//             if (!currCell.isMine) {
+//                 gGame.shownCount++
+//                 gBoard[i][j].isShown = true
+//                 var pos = { i, j }
+//                 var elCell = document.querySelector(`#${getClassName(pos)}`)
+//                 revealCell(elCell, i, j)
+//             }
+//         }
+//     }
+// }
+
+//This algorithm expands cells shown as used in original Mine-Sweeper
+//I used a stack data structure to keep track of potential cells to be shown. I didn't use recursion, although it would be a similar solution
+function expandShown(rowIdx, colIdx) {
+    const stack = [{ rowIdx, colIdx }]
+    while (stack.length > 0) {
+        const currPos = stack.pop()
+        const currCell = gBoard[currPos.rowIdx][currPos.colIdx]
+        if (currCell.isShown || currCell.isMine) continue
+        currCell.isShown = true
+        var pos = { i: currPos.rowIdx, j: currPos.colIdx }
+        var elCell = document.querySelector(`#${getClassName(pos)}`)
+        revealCell(elCell, currPos.rowIdx, currPos.colIdx)
+        if (currCell.minesAroundCount === 0) {
+            for (let i = currPos.rowIdx - 1; i <= currPos.rowIdx + 1; i++) {
+                if (i < 0 || i >= gBoard.length) continue
+                for (let j = currPos.colIdx - 1; j <= currPos.colIdx + 1; j++) {
+                    if (j < 0 || j >= gBoard[i].length) continue
+                    if (i === currPos.rowIdx && j === currPos.colIdx) continue
+                    stack.push({ rowIdx: i, colIdx: j })
+                }
             }
         }
     }
@@ -267,6 +291,7 @@ function revealAllMines() {
 }
 
 function revealCell(elCell, i, j) {
+    // debugger
     gGame.shownCount++
     gBoard[i][j].isShown = true
     elCell.classList.add('cell-shown')
