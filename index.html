@@ -10,70 +10,71 @@
 
     <body onload="onInit()">
         <div class="game-header">
-            <h3 class="lives-header">Lives: <span class="lives"></span></h3>
-            <h1 class="game-title">Mine Sweeper</h1>
-            <h3 class="time-header">Timer: <span class="timer"></span></h3>
+            <h3 class="lives-header"><span class="lives"></span></h3>
+            <h1 class="time-header">Timer: <span class="timer"></span></h1>
+            <button class="smiley-btn" onclick="onInit()">
+                <img src="img/happy.png" />
+            </button>
         </div>
-       
-        <div>
-            <h3 class="score-title">Best Score</h3>
-            <table class="score-table">
-                <tr>
-                  <th>BEGINNER</th>
-                  <th>MEDIUM</th>
-                  <th>EXPERT</th>
-                </tr>
-                <tr>
-                  <td class="score-beginner"></td>
-                  <td class="score-medium"></td>
-                  <td class="score-expert"></td>
-                </tr>
-              </table>
-            </table>
+        <div class="left-zone">
+            <div>
+                <h3 class="score-title">Best Score</h3>
+                <table class="score-table">
+                    <tr>
+                      <th>BEGINNER</th>
+                      <th>MEDIUM</th>
+                      <th>EXPERT</th>
+                    </tr>
+                    <tr>
+                      <td class="score-beginner"></td>
+                      <td class="score-medium"></td>
+                      <td class="score-expert"></td>
+                    </tr>
+                  </table>
+                </table>
+            </div>
+            <div>
+                <form class="radio-buttons">
+                    <fieldset>
+                        <div>
+                            <input
+                                name="opt"
+                                type="radio"
+                                value="0"
+                                onclick="onChooseDifficulty(this.value)"
+                            />
+                            <label for="contactChoice1">BEGINNER</label>
+    
+                            <input
+                                name="opt"
+                                type="radio"
+                                value="1"
+                                onclick="onChooseDifficulty(this.value)"
+                            />
+                            <label for="contactChoice2">MEDIUM</label>
+    
+                            <input
+                                name="opt"
+                                type="radio"
+                                value="2"
+                                onclick="onChooseDifficulty(this.value)"
+                            />
+                            <label for="contactChoice3">EXPERT</label>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
         </div>
-
-        <div>
-            <form class="radio-buttons">
-                <fieldset>
-                    <div>
-                        <input
-                            name="opt"
-                            type="radio"
-                            value="0"
-                            onclick="onChooseDifficulty(this.value)"
-                        />
-                        <label for="contactChoice1">BEGINNER</label>
-
-                        <input
-                            name="opt"
-                            type="radio"
-                            value="1"
-                            onclick="onChooseDifficulty(this.value)"
-                        />
-                        <label for="contactChoice2">MEDIUM</label>
-
-                        <input
-                            name="opt"
-                            type="radio"
-                            value="2"
-                            onclick="onChooseDifficulty(this.value)"
-                        />
-                        <label for="contactChoice3">EXPERT</label>
-                    </div>
-                </fieldset>
-            </form>
+        <div class="right-zone">
+            <div class="hints"></div>
+            <div class="safe-container">
+                <button class="safe-click" onclick="onSafeClick(this)">Safe Click</button>  
+                <p>Safe clicks remaining: <span class="safe-click-remain"></span></p>
+            </div>  
+            <button class="sandbox-btn" onclick="onSandbox(this)">SandBox mode!</button>
         </div>
-        <div class="hints"></div>
-        <div class="safe-container">
-            <button class="safe-click" onclick="onSafeClick(this)">Safe Click</button>  
-            <p>Safe clicks remaining: <span class="safe-click-remain"></span></p>
-        </div>  
-        <button class="sandbox-btn" onclick="onSandbox(this)">SandBox mode!</button>
-        <h3>Hidden mines remaining: <span class="mark-count"></span></h3>
         
-        <button class="smiley-btn" onclick="onInit()">
-            <img src="img/happy.png" />
-        </button>
+        <h3 class="mines-remain">Hidden mines remaining: <span class="mark-count"></span></h3>
 
         <div class="board-container"></div>
 

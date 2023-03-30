@@ -9,6 +9,7 @@ const EXPLODING_IMG = '<img src="img/exploding.png" />'
 const VICTORY_IMG = '<img src="img/victory.png" />'
 const HINT_IMG = '<img src="img/hint.png" />'
 const HINT_READY_IMG = '<img src="img/hint-ready.png" />'
+const LIFE_IMG = '<img class="life-img" src="img/life.png" />'
 
 var gBoard
 var gLevel
@@ -19,7 +20,7 @@ var gSafeClickCount
 var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
 
 function onInit() {
-    if (!gLevel) gLevel = BEGINNER
+    if (!gLevel) gLevel = MEDIUM
     gGame = {
         isOn: true,
         shownCount: 0,
@@ -105,7 +106,7 @@ function renderHUD() {
     if (gLevel === BEGINNER) {
         gGame.lives = 1 // In beginner mode no reason to have more than 1 life (there are only 2 mines)
     }
-    elLives.innerText = gGame.lives
+    renderLives(elLives)
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
     updateSafeClickButton()
@@ -271,7 +272,14 @@ function checkGameLost(elCell, i, j) {
 function loseLifeAndUpdate() {
     gGame.lives--
     var elLives = document.querySelector('.lives')
-    elLives.innerText = gGame.lives
+    renderLives(elLives)
+}
+
+function renderLives(elLives) {
+    elLives.innerHTML = ''
+    for (var i = 0; i < gGame.lives; i++) {
+        elLives.innerHTML += LIFE_IMG
+    }
 }
 
 function gameLost() {
