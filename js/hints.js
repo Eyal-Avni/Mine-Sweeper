@@ -1,3 +1,5 @@
+'use strict'
+
 function initHints() {
     var hints = []
     var strHTML = ''
@@ -14,16 +16,10 @@ function initHints() {
 
 function onHintChoose(elHint) {
     var currHintId = +elHint.classList[1].charAt(elHint.classList[1].length - 1)
-    for (var i = 0; i < gHints.length; i++) {
-        if (currHintId === i) {
-            gHints[i].isSelected = true
-            elHint.innerHTML = HINT_READY_IMG
-        } else {
-            gHints[i].isSelected = false
-            elHint.innerHTML = HINT_IMG
-        }
-    }
-    // console.log(gHints)
+    console.log(gHints)
+    gHints[currHintId].isSelected = !gHints[currHintId].isSelected
+    elHint.innerHTML = gHints[currHintId].isSelected ? HINT_READY_IMG : HINT_IMG
+    console.log(gHints)
 }
 
 function isHintSelected() {

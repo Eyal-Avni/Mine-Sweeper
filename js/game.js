@@ -1,20 +1,21 @@
 'use strict'
 
-const BEGINNER = { SIZE: 4, MINES: 2 }
-const MEDIUM = { SIZE: 8, MINES: 14 }
-const EXPERT = { SIZE: 12, MINES: 32 }
+const BEGINNER = { SIZE: 4, MINES: 2, DIFFICULTY: 'BEGINNER' }
+const MEDIUM = { SIZE: 8, MINES: 14, DIFFICULTY: 'MEDIUM' }
+const EXPERT = { SIZE: 12, MINES: 32, DIFFICULTY: 'EXPERT' }
 
-const HAPPY_IMG = '<img src="img/happy.png">'
-const EXPLODING_IMG = '<img src="img/exploding.png">'
-const VICTORY_IMG = '<img src="img/victory.png">'
-const HINT_IMG = '<img src="img/hint.png">'
-const HINT_READY_IMG = '<img src="img/hint-ready.png">'
+const HAPPY_IMG = '<img src="img/happy.png" />'
+const EXPLODING_IMG = '<img src="img/exploding.png" />'
+const VICTORY_IMG = '<img src="img/victory.png" />'
+const HINT_IMG = '<img src="img/hint.png" />'
+const HINT_READY_IMG = '<img src="img/hint-ready.png" />'
 
 var gBoard
 var gLevel
 var gGame
 var gGameTimerInterval
 var gHints
+var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
 
 function onInit() {
     if (!gLevel) gLevel = BEGINNER
@@ -91,6 +92,7 @@ function setMinesNegsCount(board) {
 }
 
 function renderHUD() {
+    renderBestScore()
     gHints = initHints()
     // console.log(gHints)
     gGameTimerInterval = null
@@ -213,6 +215,8 @@ function checkVictory() {
         shownCount === gLevel.SIZE ** 2 - gLevel.MINES
     ) {
         gGame.isOn = false
+        var score = gGame.secsPassed
+        compareBestScore(score, gLevel.DIFFICULTY)
         var elSmiley = document.querySelector('.smiley-btn')
         elSmiley.innerHTML = VICTORY_IMG
         clearInterval(gGameTimerInterval)

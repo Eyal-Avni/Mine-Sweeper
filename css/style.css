@@ -4,6 +4,19 @@ body {
     text-align: center;
 }
 
+table {
+    margin: auto;
+}
+
+.score-title {
+    margin: 0px;
+}
+
+.score-table {
+    width: 30%;
+    margin-bottom: 10px;
+}
+
 fieldset {
     border: 0px;
 }
@@ -37,8 +50,7 @@ fieldset {
     width: 100%;
 }
 
-table {
-    margin: auto;
+.board-container {
     margin-bottom: 50px;
 }
 
