@@ -84,3 +84,40 @@ function hintHideCell(elCell, i, j) {
     elCell.classList.add('cell-hidden')
     elCell.innerHTML = ''
 }
+
+function updateSafeClickButton() {
+    var elSafeClickRemains = document.querySelector('.safe-click-remain')
+    elSafeClickRemains.innerText = gSafeClickCount
+}
+
+function onSafeClick(elButton) {
+    gSafeClickCount--
+    updateSafeClickButton()
+    if (!gSafeClickCount) elButton.setAttribute('disabled', '')
+    markRandomSafe()
+}
+
+function markRandomSafe() {
+    var opts = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if (!gBoard[i][j].isShown && !gBoard[i][j].isMine) {
+                var pos = { i, j }
+                opts.push(pos)
+            }
+        }
+    }
+    var randSafeCell = opts[getRandomInt(0, opts.length)]
+    var elMarkedSafeCell = document.querySelector(
+        `#${getClassName(randSafeCell)}`
+    )
+    gBoard[randSafeCell.i][randSafeCell.j].isMarked = true
+    elMarkedSafeCell.classList.add('cell-marked')
+    setTimeout(
+        removeMark,
+        3000,
+        elMarkedSafeCell,
+        randSafeCell.i,
+        randSafeCell.j
+    )
+}

@@ -1,7 +1,5 @@
 'use strict'
 
-// gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
-
 function renderBestScore() {
     var elBeginnerScore = document.querySelector('.score-beginner')
     var elMediumScore = document.querySelector('.score-medium')
@@ -18,10 +16,8 @@ function renderBestScore() {
 }
 
 function compareBestScore(score, difficulty) {
-    // debugger
     if (score < gScore[difficulty] || !gScore[difficulty]) {
         gScore[difficulty] = score
-        // console.log(score)
         localStorage.setItem(`${difficulty}`, score)
         console.log(localStorage.getItem(difficulty))
     }

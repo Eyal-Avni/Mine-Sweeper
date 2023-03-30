@@ -15,6 +15,7 @@ var gLevel
 var gGame
 var gGameTimerInterval
 var gHints
+var gSafeClickCount
 var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
 
 function onInit() {
@@ -94,6 +95,7 @@ function setMinesNegsCount(board) {
 function renderHUD() {
     renderBestScore()
     gHints = initHints()
+    gSafeClickCount = 3
     gGameTimerInterval = null
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = gGame.secsPassed
@@ -101,11 +103,12 @@ function renderHUD() {
     elMarkCount.innerText = gLevel.MINES - gGame.markedCount
     var elLives = document.querySelector('.lives')
     if (gLevel === BEGINNER) {
-        gGame.lives = 1 // In begginer mode no reason to have more than 1 life (there are only 2 mines)
+        gGame.lives = 1 // In beginner mode no reason to have more than 1 life (there are only 2 mines)
     }
     elLives.innerText = gGame.lives
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
+    updateSafeClickButton()
 }
 
 function renderBoard(mat, selector) {

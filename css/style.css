@@ -10,18 +10,22 @@ body {
         'Lucida Sans', Arial, sans-serif;
 }
 
-.game-header {
-    /* display: inline-block; */
+.lives-header {
+    display: inline-block;
+    padding-right: 400px;
 }
 
-.game-header h3 {
+.time-header {
     display: inline-block;
-    padding-left: 200px;
-    padding-right: 200px;
+    padding-left: 400px;
 }
 
 .game-header h1 {
     display: inline-block;
+}
+
+.safe-container p {
+    margin: 0;
 }
 
 table {

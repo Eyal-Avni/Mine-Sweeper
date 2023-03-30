@@ -10,9 +10,9 @@
 
     <body onload="onInit()">
         <div class="game-header">
-            <h3>Lives: <span class="lives"></span></h3>
+            <h3 class="lives-header">Lives: <span class="lives"></span></h3>
             <h1 class="game-title">Mine Sweeper</h1>
-            <h3>Timer: <span class="timer"></span></h3>
+            <h3 class="time-header">Timer: <span class="timer"></span></h3>
         </div>
        
         <div>
@@ -64,7 +64,10 @@
             </form>
         </div>
         <div class="hints"></div>
-        
+        <div class="safe-container">
+            <button class="safe-click" onclick="onSafeClick(this)">Safe Click</button>  
+            <p>clicks remaining: <span class="safe-click-remain"></span></p>
+        </div>  
         <h3>Hidden mines remaining: <span class="mark-count"></span></h3>
         
         <button class="smiley-btn" onclick="onInit()">
