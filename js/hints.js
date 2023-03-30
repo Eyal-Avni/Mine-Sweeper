@@ -88,6 +88,8 @@ function hintHideCell(elCell, i, j) {
 function updateSafeClickButton() {
     var elSafeClickRemains = document.querySelector('.safe-click-remain')
     elSafeClickRemains.innerText = gSafeClickCount
+    var elSafeClickBtn = document.querySelector('.safe-click')
+    elSafeClickBtn.disabled = false
 }
 
 function onSafeClick(elButton) {
@@ -123,17 +125,19 @@ function markRandomSafe() {
 }
 
 function saveAction() {
-    var savedBoard = gBoard.map((x) => x)
-    // savedBoard = gBoard.map((x) => x)
-    // console.log(gBoard)
-    // console.log(savedBoard)
-    gUndoStack.push(savedBoard)
-    console.log(gUndoStack)
+    var savedBoard = []
+    var savedGame = []
+    savedBoard = JSON.parse(JSON.stringify(gBoard)) //Deep copy of gBoard
+    savedGame = JSON.parse(JSON.stringify(gGame)) //Deep copy of gGame
+    gUndoBoardStack.push(savedBoard)
+    gUndoGameStack.push(savedGame)
 }
 
 function onUndo() {
-    debugger
-    gBoard = gUndoStack.pop()
-    console.log(gBoard)
+    if (!gUndoBoardStack.length) return
+    gBoard = JSON.parse(JSON.stringify(gUndoBoardStack.pop()))
+    gGame = JSON.parse(JSON.stringify(gUndoGameStack.pop()))
     renderBoard(gBoard, '.board-container')
+    renderHUD()
+    if (gUndoBoardStack.length === 1) onInit()
 }

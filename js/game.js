@@ -18,7 +18,8 @@ var gGameTimerInterval
 var gHints
 var gSafeClickCount
 var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
-var gUndoStack
+var gUndoBoardStack
+var gUndoGameStack
 
 function onInit() {
     if (!gLevel) gLevel = MEDIUM
@@ -32,9 +33,12 @@ function onInit() {
         isDarkMode: false,
     }
     gBoard = buildBoard()
-    gUndoStack = []
+    gUndoBoardStack = []
+    gUndoGameStack = []
+    gSafeClickCount = 3
     saveAction()
     clearInterval(gGameTimerInterval)
+    gGameTimerInterval = null
     renderBoard(gBoard, '.board-container')
     renderHUD()
     closeModal()
@@ -101,8 +105,6 @@ function setMinesNegsCount(board) {
 function renderHUD() {
     renderBestScore()
     gHints = initHints()
-    gSafeClickCount = 3
-    gGameTimerInterval = null
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = gGame.secsPassed
     updateMarkCount()
@@ -122,13 +124,14 @@ function renderBoard(mat, selector) {
     var strHTML = '<table border="0"><tbody>'
     for (var i = 0; i < mat.length; i++) {
         strHTML += '<tr>'
-        for (var j = 0; j < mat[0].length; j++) {
+        for (var j = 0; j < mat.length; j++) {
             var cell = mat[i][j]
             var className = `cell`
             className += cell.isShown ? ' cell-shown' : ' cell-hidden'
-            // if (cell.isMine) className += ' cell-mine'
+            if (cell.isMine && cell.isShown) className += ' cell-mine'
+            if (cell.isMarked && !cell.isShown) className += ' cell-marked'
             strHTML += `<td id="cell-${i}-${j}" class="${className}" onclick="onCellClicked(this,${i},${j})" >`
-            if (!cell.isMine && cell.minesAroundCount > 0 && !cell.isShown) {
+            if (!cell.isMine && cell.minesAroundCount > 0 && cell.isShown) {
                 strHTML += `${cell.minesAroundCount}`
             }
             strHTML += '</td>'
@@ -136,7 +139,7 @@ function renderBoard(mat, selector) {
         strHTML += '</tr>'
     }
     strHTML += '</tbody></table>'
-    const elContainer = document.querySelector(selector)
+    var elContainer = document.querySelector(selector)
     elContainer.innerHTML = strHTML
     handleRightClicks('.cell')
 }
@@ -144,11 +147,13 @@ function renderBoard(mat, selector) {
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
     if (gBoard[i][j].isShown) return
+    saveAction()
     if (isHintSelected()) {
         useSelectedHint(elCell)
         return
     }
     if (gBoard[i][j].isMine) {
+        updateMarkCount()
         checkGameLost(elCell, i, j)
         return
     }
@@ -163,7 +168,6 @@ function onCellClicked(elCell, i, j) {
     }
     var elSmiley = document.querySelector('.smiley-btn')
     elSmiley.innerHTML = HAPPY_IMG
-    saveAction()
     checkVictory()
 }
 
@@ -171,6 +175,7 @@ function onCellMarked(elCell) {
     if (!gGame.isOn) return
     var coords = getCellCoord(elCell.id)
     if (gBoard[coords.i][coords.j].isShown) return
+    saveAction()
     startTimer()
     gBoard[coords.i][coords.j].isMarked = !gBoard[coords.i][coords.j].isMarked
     elCell.classList.toggle('cell-marked')
@@ -369,6 +374,7 @@ function onToggleDisplayMode() {
     var elSmiley = document.querySelector('.smiley-btn')
     var elRestartBtn = document.querySelector('.restart-btn')
     var elModal = document.querySelector('.modal')
+    var elHints = document.querySelectorAll('.hint-btn img')
     if (gGame.isDarkMode) {
         elBody.classList.add('dark-mode-filter')
         elModal.style.color = 'white'
@@ -383,6 +389,9 @@ function onToggleDisplayMode() {
         elImgs.forEach((elImg) => {
             elImg.classList.add('dark-mode-filter')
         })
+        elHints.forEach((elHint) => {
+            elHint.style.filter = 'invert(100%)'
+        })
     } else {
         elBody.classList.remove('dark-mode-filter')
         elModal.style.color = 'black'
@@ -395,6 +404,9 @@ function onToggleDisplayMode() {
         })
         elImgs.forEach((elImg) => {
             elImg.classList.remove('dark-mode-filter')
+        })
+        elHints.forEach((elHint) => {
+            elHint.style.filter = 'invert(0%)'
         })
         elRestartBtn.style.color = 'whitesmoke'
     }
