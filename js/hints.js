@@ -2,21 +2,33 @@
 
 function initHints() {
     var hints = []
-    var strHTML = ''
+    // var strHTML = ''
     for (var i = 0; i < 3; i++) {
         hints.push({ id: i, isUsed: false, isSelected: false })
-        strHTML += `<button class="hint-btn hint-${i}" onclick="onHintChoose(this)">
-        <img src="img/hint.png" />
-    </button>`
+        //     strHTML += `<button class="hint-btn hint-${i}" onclick="onHintChoose(this)">
+        //     <img src="img/hint.png" />
+        // </button>`
+    }
+    // var hintContainer = document.querySelector('.hints')
+    // hintContainer.innerHTML = strHTML
+    return hints
+}
+
+function renderHints() {
+    var strHTML = ''
+    for (var i = 0; i < 3; i++) {
+        if (!gHints[i].isUsed) {
+            strHTML += `<button class="hint-btn hint-${i}" onclick="onHintChoose(this)">
+            <img src="img/hint.png" />
+        </button>`
+        }
     }
     var hintContainer = document.querySelector('.hints')
     hintContainer.innerHTML = strHTML
-    return hints
 }
 
 function onHintChoose(elHint) {
     var currHintId = +elHint.classList[1].charAt(elHint.classList[1].length - 1)
-    console.log(gHints)
     gHints[currHintId].isSelected = !gHints[currHintId].isSelected
     elHint.innerHTML = gHints[currHintId].isSelected ? HINT_READY_IMG : HINT_IMG
     if (gGame.isDarkMode) elHint.style.filter = 'invert(100%)'
@@ -96,7 +108,7 @@ function updateSafeClickButton() {
 function onSafeClick(elButton) {
     gSafeClickCount--
     updateSafeClickButton()
-    if (!gSafeClickCount) elButton.setAttribute('disabled', '')
+    if (gSafeClickCount <= 0) elButton.setAttribute('disabled', '')
     markRandomSafe()
 }
 
@@ -143,4 +155,55 @@ function onUndo() {
         renderHUD()
         if (gUndoBoardStack.length === 1) onInit()
     }
+}
+
+function onMegaClick() {
+    gMega.isOn = true
+    var elRestartBtn = document.querySelector('.restart-btn')
+    elRestartBtn.hidden = true
+    openModal('Choose top-left and bottom-right cells')
+}
+
+function megaChooseSubBoard(elCell) {
+    var pos = getCellCoord(elCell.id)
+    if (!gMega.topLeftIdx) {
+        gMega.topLeftIdx = pos
+    } else {
+        gMega.bottomRightIdx = pos
+        megaRevealSubBoard()
+    }
+}
+
+function megaRevealSubBoard() {
+    for (var i = gMega.topLeftIdx.i; i <= gMega.bottomRightIdx.i; i++) {
+        for (var j = gMega.topLeftIdx.j; j <= gMega.bottomRightIdx.j; j++) {
+            gBoard[i][j].isShown = true
+            var pos = { i, j }
+            var elCell = document.querySelector(`#${getClassName(pos)}`)
+            elCell.classList.add('cell-shown')
+            elCell.classList.remove('cell-hidden')
+            if (gBoard[i][j].isMine) {
+                elCell.classList.add('cell-mine')
+            }
+        }
+    }
+    setTimeout(() => {
+        for (var i = gMega.topLeftIdx.i; i <= gMega.bottomRightIdx.i; i++) {
+            for (var j = gMega.topLeftIdx.j; j <= gMega.bottomRightIdx.j; j++) {
+                gBoard[i][j].isShown = false
+                var pos = { i, j }
+                var elCell = document.querySelector(`#${getClassName(pos)}`)
+                elCell.classList.add('cell-hidden')
+                elCell.classList.remove('cell-shown')
+                elCell.classList.remove('cell-mine')
+            }
+        }
+    }, 2000)
+    gMega.isOn = false
+    closeModal()
+    var elRestartBtn = document.querySelector('.restart-btn')
+    elRestartBtn.hidden = false
+    var elMegaHintBtn = document.querySelector('.mega-hint-btn')
+    elMegaHintBtn.disabled = true
+    gMega.isUsed = true
 }
