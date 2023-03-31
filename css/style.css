@@ -1,13 +1,15 @@
 body {
-    background-image: url(../img/beach.png);
-    background-position: center;
-    background-repeat: no-repeat;
+    background: url(../img/beach.png) no-repeat center fixed;
     background-size: cover;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
 }
+
 button {
     background-color: transparent;
+    border-radius: 50px;
+    align-items: center;
+    font-weight: bold;
 }
 
 .dark-mode-filter {
@@ -16,10 +18,12 @@ button {
     background-blend-mode: multiply;
 }
 
+.top-left {
+    display: inline-block;
+}
+
 .lives-header {
     display: inline-block;
-    padding-right: 18%;
-    padding-left: 5%;
 }
 
 .lives {
@@ -35,16 +39,21 @@ button {
 }
 
 .time-header {
+    position: absolute;
     display: inline-block;
-    padding-left: 10%;
+    left: 47%;
+    top: 5%;
+    /* padding-left: 10%; */
 }
 
 .smiley-btn {
+    position: absolute;
     background-image: url('../img/sun.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-left: 28%;
+    left: 90%;
+    top: 2%;
     width: 150px;
     border: none;
     cursor: pointer;
@@ -57,18 +66,23 @@ button {
 }
 
 .mines-remain {
-    text-align: center;
-    margin-top: 0;
+    position: absolute;
+    left: 42%;
+    top: 2%;
 }
 
 .left-zone {
+    position: absolute;
     display: inline-block;
     text-align: center;
+    left: 5%;
+    top: 37%;
+    font-weight: bold;
 }
 
-.score-title {
+/* .score-title {
     margin: 0px;
-}
+} */
 
 .score-table {
     width: 100%;
@@ -84,11 +98,55 @@ fieldset {
     margin: auto;
 }
 
-.right-zone {
-    padding-bottom: 100px;
-    display: inline-block;
+.modes {
+    padding-bottom: 20px;
+}
+
+.sandbox-btn {
+    margin-top: 10px;
+}
+
+.dark-mode-btn {
+    background-color: rgb(54, 0, 80);
+    font-weight: bold;
+    color: white;
+}
+
+.toolbox {
+    position: absolute;
+    display: block;
+    top: 40%;
+    left: 75%;
+    width: 250px;
+    background-color: transparent;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     text-align: center;
-    padding-left: 62%;
+    cursor: grab;
+}
+
+.toolbox-header {
+    font-size: 25px;
+    padding: 10px;
+    margin: 0px;
+}
+
+.toolbox-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 1s ease;
+}
+
+.toolbox:hover {
+    max-height: 500px;
+}
+
+.toolbox:hover .toolbox-content {
+    max-height: 500px;
+}
+
+.hints {
+    margin-bottom: 15px;
 }
 
 .hint-btn {
@@ -104,12 +162,14 @@ fieldset {
     background-color: transparent;
 }
 
-.safe-container p {
-    margin: 0;
+.safe-click {
+    cursor: pointer;
+    margin-bottom: 15px;
 }
 
-.sandbox-btn {
-    margin-top: 10px;
+.undo {
+    cursor: pointer;
+    margin-bottom: 15px;
 }
 
 table {
@@ -118,9 +178,11 @@ table {
 }
 
 .board-container {
-    width: 300px;
-    height: 300px;
-    margin: auto;
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    left: 37%;
+    top: 40%;
 }
 
 .board-container table {
@@ -130,6 +192,8 @@ table {
 }
 
 .cell {
+    /* padding: 5px; */
+    /* margin: 5px; */
     font-size: 1.5em;
     width: calc(100% / 12);
     height: calc(100% / 12);
@@ -139,6 +203,8 @@ table {
     background-repeat: no-repeat;
     background-size: cover;
     transition: 150ms;
+    /* border: 1px dashed rgba(184, 135, 11, 0.449); */
+    /* border-radius: 10px; */
 }
 
 .cell-shown {
@@ -148,6 +214,10 @@ table {
 .cell-hidden {
     background-image: url('../img/hidden.png');
     cursor: pointer;
+}
+
+.cell-hidden:hover {
+    outline: 1px dashed darkred;
 }
 
 .cell-marked {
@@ -162,15 +232,16 @@ table {
 
 .modal {
     display: none;
-    border: solid 3px grey;
+    border: solid 1px black;
+    border-radius: 10px;
     width: 300px;
     height: 200px;
-    background-color: whitesmoke;
+    background-color: transparent;
     color: black;
     font-size: 32px;
     position: absolute;
-    top: 400px;
-    left: calc(20% - 150px);
+    top: 68%;
+    left: 6%;
     text-align: center;
 }
 

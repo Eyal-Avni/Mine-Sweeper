@@ -10,8 +10,14 @@
 
     <body onload="onInit()">
         <div class="game-header">
-            <h3 class="lives-header"><span class="lives"></span></h3>
-            <h1 class="time-header">Timer: <span class="timer"></span></h1>
+            <div class="top-left">
+                <button class="dark-mode-btn" onclick="onToggleDisplayMode(this)"><span class="dark-mode-txt"></span></button>
+                <button class="sandbox-btn" onclick="onSandbox(this)">SandBox mode!</button>
+                <br>
+                <h3 class="lives-header"><span class="lives"></span></h3>
+            </div>
+          
+            <h1 class="time-header"><span class="timer"></span></h1>
             <button class="smiley-btn" onclick="onInit()">
                 <img src="img/happy.png" />
             </button>
@@ -19,22 +25,7 @@
         <h3 class="mines-remain">Hidden mines remaining: <span class="mark-count"></span></h3>
         <div class="left-zone">
             <div>
-                <h3 class="score-title">Best Score</h3>
-                <table class="score-table">
-                    <tr>
-                      <th>BEGINNER</th>
-                      <th>MEDIUM</th>
-                      <th>EXPERT</th>
-                    </tr>
-                    <tr>
-                      <td class="score-beginner"></td>
-                      <td class="score-medium"></td>
-                      <td class="score-expert"></td>
-                    </tr>
-                  </table>
-                </table>
-            </div>
-            <div>
+                <h2>Choose difficulty</h2>
                 <form class="radio-buttons">
                     <fieldset>
                         <div>
@@ -65,20 +56,32 @@
                     </fieldset>
                 </form>
             </div>
+            <div>
+                <h2 class="score-title">Best Score</h2>
+                <table class="score-table">
+                    <tr>
+                      <th>BEGINNER</th>
+                      <th>MEDIUM</th>
+                      <th>EXPERT</th>
+                    </tr>
+                    <tr>
+                      <td class="score-beginner"></td>
+                      <td class="score-medium"></td>
+                      <td class="score-expert"></td>
+                    </tr>
+                  </table>
+                </table>
+            </div>
         </div>
-        <div class="right-zone">
-            <button class="undo" onclick="onUndo(this)">Undo</button>
-            <button class="dark-mode" onclick="onToggleDisplayMode(this)"><span class="dark-mode-txt"></span></button>
-
-            <div class="hints"></div>
-            <div class="safe-container">
-                <button class="safe-click" onclick="onSafeClick(this)">Safe Click</button>  
-                <p>Safe clicks remaining: <span class="safe-click-remain"></span></p>
-            </div>  
-            <button class="sandbox-btn" onclick="onSandbox(this)">SandBox mode!</button>
-        </div>
-
         <div class="board-container"></div>
+        <div class="toolbox">
+            <h3 class="toolbox-header">Draggable Tool Box</h3>
+            <div class="toolbox-content">
+                <button class="undo" onclick="onUndo(this)">Undo</button>
+                <div class="hints"></div>
+                <button class="safe-click" onclick="onSafeClick(this)">Safe Clicks: <span class="safe-click-remain"></span> remain</button>  
+            </div>
+        </div>  
 
         <div class="modal">
             <h3 class="msg"></h3>

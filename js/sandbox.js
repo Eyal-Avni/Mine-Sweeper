@@ -13,6 +13,9 @@ function onSandbox(elSandBoxBtn) {
                 elCell.addEventListener(`click`, placeMine, false)
             }
         }
+        var elRestartBtn = document.querySelector('.restart-btn')
+        elRestartBtn.hidden = true
+        openModal('Place mines on board, then press "Play!"')
         elSandBoxBtn.innerText = 'Play!'
     } else {
         for (var i = 0; i < gBoard.length; i++) {
@@ -23,6 +26,9 @@ function onSandbox(elSandBoxBtn) {
                 elCell.classList.remove('cell-mine')
             }
         }
+        closeModal()
+        var elRestartBtn = document.querySelector('.restart-btn')
+        elRestartBtn.hidden = false
         setMinesNegsCount(gBoard)
         elSandBoxBtn.innerText = 'SandBox mode!'
         gGame.isOn = true

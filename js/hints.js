@@ -19,7 +19,8 @@ function onHintChoose(elHint) {
     console.log(gHints)
     gHints[currHintId].isSelected = !gHints[currHintId].isSelected
     elHint.innerHTML = gHints[currHintId].isSelected ? HINT_READY_IMG : HINT_IMG
-    console.log(gHints)
+    if (gGame.isDarkMode) elHint.style.filter = 'invert(100%)'
+    else elHint.style.filter = 'invert(0%)'
 }
 
 function isHintSelected() {
@@ -134,10 +135,12 @@ function saveAction() {
 }
 
 function onUndo() {
-    if (!gUndoBoardStack.length) return
-    gBoard = JSON.parse(JSON.stringify(gUndoBoardStack.pop()))
-    gGame = JSON.parse(JSON.stringify(gUndoGameStack.pop()))
-    renderBoard(gBoard, '.board-container')
-    renderHUD()
-    if (gUndoBoardStack.length === 1) onInit()
+    if (gGame.isOn) {
+        if (!gUndoBoardStack.length) return
+        gBoard = JSON.parse(JSON.stringify(gUndoBoardStack.pop()))
+        gGame = JSON.parse(JSON.stringify(gUndoGameStack.pop()))
+        renderBoard(gBoard, '.board-container')
+        renderHUD()
+        if (gUndoBoardStack.length === 1) onInit()
+    }
 }

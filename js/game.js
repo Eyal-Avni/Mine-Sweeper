@@ -42,6 +42,8 @@ function onInit() {
     renderBoard(gBoard, '.board-container')
     renderHUD()
     closeModal()
+    var elToolbox = document.querySelector('.toolbox')
+    dragElement(elToolbox)
 }
 
 function onChooseDifficulty(difficulty) {
@@ -106,7 +108,7 @@ function renderHUD() {
     renderBestScore()
     gHints = initHints()
     var elTimer = document.querySelector('.timer')
-    elTimer.innerText = gGame.secsPassed
+    elTimer.innerText = formatTime(gGame.secsPassed)
     updateMarkCount()
     var elLives = document.querySelector('.lives')
     if (gLevel === BEGINNER) {
@@ -117,7 +119,7 @@ function renderHUD() {
     elSmiley.innerHTML = HAPPY_IMG
     updateSafeClickButton()
     var elDarkModeTxt = document.querySelector('.dark-mode-txt')
-    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Light Mode' : 'Dark Mode'
+    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Day Mode' : 'Dark Mode'
 }
 
 function renderBoard(mat, selector) {
@@ -216,6 +218,7 @@ function expandShown(rowIdx, colIdx) {
         var pos = { i: currPos.rowIdx, j: currPos.colIdx }
         var elCell = document.querySelector(`#${getClassName(pos)}`)
         revealCell(elCell, currPos.rowIdx, currPos.colIdx)
+        updateMarkCount()
         if (currCell.minesAroundCount === 0) {
             for (let i = currPos.rowIdx - 1; i <= currPos.rowIdx + 1; i++) {
                 if (i < 0 || i >= gBoard.length) continue
@@ -238,7 +241,7 @@ function startTimer() {
 
 function updateTimer(elTimer) {
     gGame.secsPassed++
-    elTimer.innerText = gGame.secsPassed
+    elTimer.innerText = formatTime(gGame.secsPassed)
 }
 
 function checkVictory() {
@@ -375,6 +378,7 @@ function onToggleDisplayMode() {
     var elRestartBtn = document.querySelector('.restart-btn')
     var elModal = document.querySelector('.modal')
     var elHints = document.querySelectorAll('.hint-btn img')
+    var elDarkModeButton = document.querySelector('.dark-mode-btn')
     if (gGame.isDarkMode) {
         elBody.classList.add('dark-mode-filter')
         elModal.style.color = 'white'
@@ -392,12 +396,15 @@ function onToggleDisplayMode() {
         elHints.forEach((elHint) => {
             elHint.style.filter = 'invert(100%)'
         })
+        elDarkModeButton.style.color = 'black'
+        elDarkModeButton.style.backgroundColor = 'gold'
     } else {
         elBody.classList.remove('dark-mode-filter')
         elModal.style.color = 'black'
         elBody.style.color = 'black'
         elSmiley.style.backgroundImage = 'url("../img/sun.png")'
         elSmiley.style.backgroundSize = 'cover'
+
         elButtons.forEach((elButton) => {
             elButton.style.color = 'black'
             elButton.classList.remove('dark-mode-filter')
@@ -408,8 +415,10 @@ function onToggleDisplayMode() {
         elHints.forEach((elHint) => {
             elHint.style.filter = 'invert(0%)'
         })
+        elDarkModeButton.style.color = 'white'
+        elDarkModeButton.style.backgroundColor = 'rgb(54, 0, 80)'
         elRestartBtn.style.color = 'whitesmoke'
     }
     var elDarkModeTxt = document.querySelector('.dark-mode-txt')
-    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Light Mode' : 'Dark Mode'
+    elDarkModeTxt.innerText = gGame.isDarkMode ? 'Day Mode' : 'Dark Mode'
 }
