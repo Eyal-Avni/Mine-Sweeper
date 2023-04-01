@@ -164,7 +164,7 @@ function onCellClicked(elCell, i, j) {
         return
     }
     if (gBoard[i][j].isShown) return
-    saveAction()
+
     if (isHintSelected()) {
         useSelectedHint(elCell)
         return
@@ -178,6 +178,7 @@ function onCellClicked(elCell, i, j) {
     if (countMines() === 0) {
         randomizeMines(gBoard, i, j)
     }
+    saveAction()
     updateMarkCount()
     expandShown(i, j)
     if (gBoard[i][j].isMarked) {

@@ -2,15 +2,9 @@
 
 function initHints() {
     var hints = []
-    // var strHTML = ''
     for (var i = 0; i < 3; i++) {
         hints.push({ id: i, isUsed: false, isSelected: false })
-        //     strHTML += `<button class="hint-btn hint-${i}" onclick="onHintChoose(this)">
-        //     <img src="img/hint.png" />
-        // </button>`
     }
-    // var hintContainer = document.querySelector('.hints')
-    // hintContainer.innerHTML = strHTML
     return hints
 }
 
@@ -153,11 +147,12 @@ function onUndo() {
         gGame = JSON.parse(JSON.stringify(gUndoGameStack.pop()))
         renderBoard(gBoard, '.board-container')
         renderHUD()
-        if (gUndoBoardStack.length === 1) onInit()
+        if (!gUndoBoardStack.length) onInit()
     }
 }
 
 function onMegaClick() {
+    saveAction()
     gMega.isOn = true
     var elRestartBtn = document.querySelector('.restart-btn')
     elRestartBtn.hidden = true
@@ -165,10 +160,16 @@ function onMegaClick() {
 }
 
 function megaChooseSubBoard(elCell) {
+    elCell.classList.add('mega-mark')
     var pos = getCellCoord(elCell.id)
     if (!gMega.topLeftIdx) {
         gMega.topLeftIdx = pos
     } else {
+        var elTopLeftCell = document.querySelector(
+            `#${getClassName(gMega.topLeftIdx)}`
+        )
+        elTopLeftCell.classList.remove('mega-mark')
+        elCell.classList.remove('mega-mark')
         gMega.bottomRightIdx = pos
         megaRevealSubBoard()
     }
@@ -187,18 +188,7 @@ function megaRevealSubBoard() {
             }
         }
     }
-    setTimeout(() => {
-        for (var i = gMega.topLeftIdx.i; i <= gMega.bottomRightIdx.i; i++) {
-            for (var j = gMega.topLeftIdx.j; j <= gMega.bottomRightIdx.j; j++) {
-                gBoard[i][j].isShown = false
-                var pos = { i, j }
-                var elCell = document.querySelector(`#${getClassName(pos)}`)
-                elCell.classList.add('cell-hidden')
-                elCell.classList.remove('cell-shown')
-                elCell.classList.remove('cell-mine')
-            }
-        }
-    }, 2000)
+    setTimeout(() => onUndo(), 2000)
     gMega.isOn = false
     closeModal()
     var elRestartBtn = document.querySelector('.restart-btn')
@@ -206,4 +196,47 @@ function megaRevealSubBoard() {
     var elMegaHintBtn = document.querySelector('.mega-hint-btn')
     elMegaHintBtn.disabled = true
     gMega.isUsed = true
+}
+
+function onExterminator() {
+    var chosenMinesPos = locateThreeRandomMines()
+    if (!chosenMinesPos.length) return
+    else {
+        for (var i = 0; i < chosenMinesPos.length; i++) {
+            gBoard[chosenMinesPos[i].i][chosenMinesPos[i].j].isMine = false
+        }
+        var elRestartBtn = document.querySelector('.restart-btn')
+        openModal('removed 3 mines, wont remove last one')
+        elRestartBtn.hidden = true
+        setTimeout(() => {
+            closeModal()
+            elRestartBtn.hidden = false
+        }, 1000)
+    }
+    setMinesNegsCount(gBoard)
+    renderBoard(gBoard, '.board-container')
+    updateMarkCount()
+}
+
+function locateThreeRandomMines() {
+    var allMinesPos = []
+    var chosenMinesPos = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if (gBoard[i][j].isMine) {
+                var pos = { i, j }
+                allMinesPos.push(pos)
+            }
+        }
+    }
+    for (var i = 0; i < 3; i++) {
+        if (allMinesPos.length <= 1) continue
+        var chosenMine = allMinesPos.splice(
+            [getRandomInt(0, allMinesPos.length)],
+            1
+        )
+        chosenMine = chosenMine[0]
+        chosenMinesPos.push(chosenMine)
+    }
+    return chosenMinesPos
 }
