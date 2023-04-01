@@ -102,7 +102,10 @@ function updateSafeClickButton() {
 function onSafeClick(elButton) {
     gSafeClickCount--
     updateSafeClickButton()
-    if (gSafeClickCount <= 0) elButton.setAttribute('disabled', '')
+    if (gSafeClickCount <= 0) {
+        elButton.setAttribute('disabled', '')
+        elButton.color = 'gray'
+    }
     markRandomSafe()
 }
 
@@ -194,6 +197,7 @@ function megaRevealSubBoard() {
     var elRestartBtn = document.querySelector('.restart-btn')
     elRestartBtn.hidden = false
     var elMegaHintBtn = document.querySelector('.mega-hint-btn')
+    elMegaHintBtn.color = 'gray'
     elMegaHintBtn.disabled = true
     gMega.isUsed = true
 }

@@ -17,7 +17,7 @@ var gGame
 var gGameTimerInterval
 var gHints
 var gSafeClickCount
-var gScore = { BEGINNER: null, MEDIUM: null, EXPERT: null }
+var gScore
 var gUndoBoardStack
 var gUndoGameStack
 var gMega
@@ -43,6 +43,14 @@ function onInit() {
         isUsed: false,
         topLeftIdx: null,
         bottomRightIdx: null,
+    }
+    gScore = {
+        BEGINNER: null,
+        bFormated: null,
+        MEDIUM: null,
+        mFormated: null,
+        EXPERT: null,
+        eFormated: null,
     }
     saveAction()
     clearInterval(gGameTimerInterval)
@@ -282,7 +290,9 @@ function checkVictory() {
         revealAllMines()
         gGame.isOn = false
         var score = gGame.secsPassed
-        compareBestScore(score, gLevel.DIFFICULTY)
+        var elTimer = document.querySelector('.timer')
+        var formatedScore = elTimer.innerText
+        compareBestScore(score, formatedScore, gLevel.DIFFICULTY)
         var elSmiley = document.querySelector('.smiley-btn')
         elSmiley.innerHTML = VICTORY_IMG
         clearInterval(gGameTimerInterval)
@@ -391,6 +401,13 @@ function onToggleDisplayMode() {
     elDarkModeTxt.innerText = gGame.isDarkMode ? 'Day Mode' : 'Dark Mode'
     var elBody = document.querySelector('body')
     var elButtons = document.querySelectorAll('button')
+    var elButtonsArr = [].slice.call(elButtons)
+    for (var i = 0; i < elButtonsArr.length; i++) {
+        if (elButtonsArr[i].disabled) {
+            elButtonsArr.splice(i, 1)
+            // console.log(elButtons)
+        }
+    }
     var elImgs = document.querySelectorAll('img')
     var elSmiley = document.querySelector('.smiley-btn')
     var elRestartBtn = document.querySelector('.restart-btn')
@@ -404,7 +421,7 @@ function onToggleDisplayMode() {
         elBody.style.color = 'white'
         elSmiley.style.backgroundImage = 'url("../img/moon.png")'
         elSmiley.style.backgroundSize = 'contain'
-        elButtons.forEach((elButton) => {
+        elButtonsArr.forEach((elButton) => {
             elButton.style.color = 'white'
             elButton.classList.add('dark-mode-filter')
         })
@@ -418,22 +435,22 @@ function onToggleDisplayMode() {
         elDarkModeButton.style.backgroundColor = 'gold'
     } else {
         elBody.classList.remove('dark-mode-filter')
-        elModal.style.color = 'black'
-        elBody.style.color = 'black'
+        elModal.style.color = null
+        elBody.style.color = null
         elSmiley.style.backgroundImage = 'url("../img/sun.png")'
         elSmiley.style.backgroundSize = 'cover'
-        elButtons.forEach((elButton) => {
-            elButton.style.color = 'black'
+        elButtonsArr.forEach((elButton) => {
+            elButton.style.color = null
             elButton.classList.remove('dark-mode-filter')
         })
         elImgs.forEach((elImg) => {
             elImg.classList.remove('dark-mode-filter')
         })
         elHints.forEach((elHint) => {
-            elHint.style.filter = 'invert(0%)'
+            elHint.style.filter = null
         })
-        elDarkModeButton.style.color = 'white'
-        elDarkModeButton.style.backgroundColor = 'rgb(54, 0, 80)'
-        elRestartBtn.style.color = 'whitesmoke'
+        elDarkModeButton.style.color = null
+        elDarkModeButton.style.backgroundColor = null
+        elRestartBtn.style.color = null
     }
 }
